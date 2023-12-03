@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
 	FILE *fptr;
 	char **set_info, fchar;
 	int game_id, game_id_sum = 0, red_count = 0, green_count = 0, blue_count = 0, game_possible;
+	int minimum_set_powers_sum = 0, red_max= 0, green_max = 0, blue_max = 0;
 	set_info = malloc(MAX_STR_LENGTH * sizeof(char));
 	fptr = fopen(*(argv+1), "r");
 
@@ -27,6 +28,17 @@ int main(int argc, char **argv) {
 		while (fchar != '\n' && fchar != EOF) {
 			fchar = update_color_count_set(fptr, &red_count, &green_count, &blue_count);
 
+			/* Update maximums */
+			if (red_count > red_max) {
+				red_max = red_count;
+			}
+			if (green_count > green_max) {
+				green_max = green_count;
+			}
+			if (blue_count > blue_max) {
+				blue_max = blue_count;
+			}
+
 			/* Same set? */
 			if (fchar == ',') {
 				fgetc(fptr);
@@ -37,8 +49,12 @@ int main(int argc, char **argv) {
 				}
 
 				/* End of game */
-				if (fchar == '\n' && game_possible) {
-					game_id_sum += game_id;
+				if (fchar == '\n') {
+					if (game_possible) {
+						game_id_sum += game_id;
+					}
+					minimum_set_powers_sum += red_max * green_max * blue_max;
+					red_max = 0, green_max = 0, blue_max = 0;
 				}
 
 				/* Reset color counts */
@@ -49,6 +65,7 @@ int main(int argc, char **argv) {
 	} while (fchar != EOF);
 
 	printf("ID sums: %d\n", game_id_sum);
+	printf("Power sums: %d\n", minimum_set_powers_sum);
 	
 	/* Close and exit */ 
 	fclose(fptr);
