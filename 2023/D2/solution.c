@@ -13,10 +13,9 @@ char update_color_count_set(FILE *, int *, int *, int *);
 int main(int argc, char **argv) {
 	/* Variable declarations */ 
 	FILE *fptr;
-	char **set_info, fchar;
+	char fchar;
 	int game_id, game_id_sum = 0, red_count = 0, green_count = 0, blue_count = 0, game_possible;
 	int minimum_set_powers_sum = 0, red_max= 0, green_max = 0, blue_max = 0;
-	set_info = malloc(MAX_STR_LENGTH * sizeof(char));
 	fptr = fopen(*(argv+1), "r");
 
 	do {
@@ -69,7 +68,6 @@ int main(int argc, char **argv) {
 	
 	/* Close and exit */ 
 	fclose(fptr);
-	free(set_info);
 	return EXIT_SUCCESS;
 }
 
