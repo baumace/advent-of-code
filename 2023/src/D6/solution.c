@@ -6,13 +6,13 @@
 #define ASCII_ZERO 48
 #define ASCII_ONE 57
 
-void get_numbers(FILE *, int *);
+void get_numbers(FILE *, long *);
 
 int main(int argc, char **argv) {
     /* Declare */
     FILE *fptr;
-    int *times, *times_traversal, *distances, *distances_traversal;
-    int permutation_num, permutation_distance, min_product, min_record, max_record;
+    long *times, *distances;
+    long permutation_num, permutation_distance, min_record, max_record;
 
     /* Initialize */
     fptr = fopen(*(argv+1), "r");
@@ -22,30 +22,22 @@ int main(int argc, char **argv) {
     get_numbers(fptr, times);
     get_numbers(fptr, distances);
 
-    times_traversal = times;
-    distances_traversal = distances;
-    min_product = 1;
-    while (*times_traversal != END_OF_NUMBERS) {
-        permutation_num = 0;
-        min_record = -1;
-        while (permutation_num < *times_traversal) {
-            permutation_distance = permutation_num*(*times_traversal - permutation_num);
-            if (permutation_distance > *distances_traversal) {
-                if (min_record == -1) {
-                    min_record = permutation_num;
-                }
-                max_record = permutation_num;
+    printf("%ld %ld\n", *times, *distances);
+
+    permutation_num = 0;
+    min_record = -1;
+    while (permutation_num < *times) {
+        permutation_distance = permutation_num*(*times - permutation_num);
+        if (permutation_distance > (long) *distances) {
+            if (min_record == -1) {
+                min_record = permutation_num;
             }
-            permutation_num++;
+            max_record = permutation_num;
         }
-        if (max_record - min_record > 0) {
-            min_product *= (max_record-min_record+1);
-        }
-        times_traversal++;
-        distances_traversal++;
+        permutation_num++;
     }
 
-    printf("%d\n", min_product);
+    printf("%ld\n", (max_record-min_record+1));
 
     fclose(fptr);
     free(times);
@@ -53,9 +45,9 @@ int main(int argc, char **argv) {
 	return EXIT_SUCCESS;
 }
 
-void get_numbers(FILE *fptr, int *output_arr) {
+void get_numbers(FILE *fptr, long *output_arr) {
     char fchar;
-    int num, is_num, spaces_run;
+    long num, is_num, spaces_run;
 
     fscanf(fptr, "%*s: ");
 
@@ -67,14 +59,9 @@ void get_numbers(FILE *fptr, int *output_arr) {
         if (is_num) {
             spaces_run = 0;
             num = num * 10 + fchar - ASCII_ZERO;
-        } else {
-            spaces_run++;
-            if (spaces_run == 1) {
-                *output_arr = num;
-                output_arr++;
-                num = 0;
-            }
         }
     } while (fchar != '\n');
+    *output_arr = num;
+    output_arr++;
     *output_arr = END_OF_NUMBERS;
 }
