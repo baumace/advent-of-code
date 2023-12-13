@@ -115,6 +115,5 @@ int string_to_digit(char *str, char *sub_str, int start, int end) {
 		sub_str++;
 		index++;
 	}
-
 	return NAN;
 }
